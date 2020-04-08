@@ -1,0 +1,4 @@
+rootProject.name='KMP_MVVM_Firebase'
+include ':AndroidApp', ':SharedCode'
+
+enableFeaturePreview('GRADLE_METADATA')

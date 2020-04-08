@@ -1,0 +1,136 @@
+apply plugin: 'org.jetbrains.kotlin.multiplatform'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.native.cocoapods'
+
+android {
+    compileSdkVersion(28)
+
+    defaultConfig {
+        minSdkVersion(21)
+        targetSdkVersion(28)
+    }
+
+    // By default the android gradle plugin expects to find the kotlin source files in
+    // the folder `main` and the test in the folder `test`. This is to be able place
+    // the source code files inside androidMain and androidTest folders
+    sourceSets {
+        main {
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+            java.srcDirs = ['src/androidMain/kotlin']
+            res.srcDirs = ['src/androidMain/res']
+        }
+        test {
+            java.srcDirs = ['src/androidTest/kotlin']
+            res.srcDirs = ['src/androidTest/res']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}
+
+kotlin {
+    targets {
+        fromPreset(presets.android, 'android')
+
+
+        def iosPreset = presets.iosX64
+        fromPreset(iosPreset, 'ios') {
+            //binaries {
+            //    framework {
+            //         Disable bitcode embedding for the simulator build.
+            //        if (iosPreset == presets.iosX64) {
+            //            embedBitcode("disable")
+            //        }
+            //    }
+            //}
+            //compilations.main.outputKinds('FRAMEWORK')
+            compilations.each {
+                it.extraOpts("-linkerOpts", "-lsqlite3")
+            }
+        }
+
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            api 'org.jetbrains.kotlin:kotlin-stdlib-common'
+
+            // COROUTINES
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutine_version"
+
+            // MOKO - MVVM
+            implementation "dev.icerock.moko:mvvm:$moko_mvvm_version"
+
+            // SERIALIZATION
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:$serializer_version"
+
+            // KODE IN
+            implementation "org.kodein.di:kodein-di-core:$kodeinVersion"
+            implementation "org.kodein.di:kodein-di-erased:$kodeinVersion"
+
+            // FIRE STORE
+            implementation "co.touchlab:firestore:0.2.5"
+        }
+
+        androidMain.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+
+            // COROUTINES
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+            // MOKO - MVVM
+            implementation "androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version"
+
+            // SERIALIZATION
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializer_version"
+
+            // FIREBASE
+            implementation "com.google.firebase:firebase-core:$firebaseFireStoreVersion"
+            implementation "com.google.firebase:firebase-firestore:$firebaseFireStoreVersion"
+        }
+
+        iosMain.dependencies {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
+
+            // COROUTINE
+            implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-native:$coroutine_version"
+
+            // SERIALIZATION
+            implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:$serializer_version"
+        }
+
+        commonTest.dependencies {
+            implementation kotlin('test-common')
+            implementation kotlin('test-annotations-common')
+            implementation "io.mockk:mockk:$mockk_version"
+        }
+    }
+}
+
+task packForXCode {
+    def buildType = project.findProperty("kotlin.build.type") ?: "DEBUG"
+    dependsOn "link${buildType.toLowerCase().capitalize()}FrameworkIos"
+    //dependsOn "linkMainDebugFrameworkIOS"
+
+    doLast {
+        def srcFile = kotlin.targets.ios.binaries.getFramework(buildType).outputFile
+        def targetDir = getProperty("configuration.build.dir")
+        copy {
+            from srcFile.parent
+            into targetDir
+            include 'SharedCode.framework/**'
+            include 'SharedCode .framework.dSYM'
+        }
+    }
+}
