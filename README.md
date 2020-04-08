@@ -9,6 +9,8 @@ Example of application using Kotlin Multiplatform and MVVM pattern for both plat
 - [Kodein-DI](https://github.com/Kodein-Framework/Kodein-DI): Dependency injector
 - [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines): Library support for Kotlin coroutines with multiplatform support
 
+<img src="https://github.com/jarroyoesp/KotlinMultiplatform_Firebase_MVVM/blob/master/images/KMP_MVVM_Firebase_schema.png">
+
 Related with: [here](https://proandroiddev.com/kotlin-multiplatform-mvvm-clean-architecture-f20b99f90b95)
 
 
