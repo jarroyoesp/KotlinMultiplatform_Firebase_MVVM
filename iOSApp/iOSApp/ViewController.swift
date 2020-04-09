@@ -81,13 +81,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     * ON CLICKS
     ****************************************************************************/
     @objc func didButtonClick(_ sender: UIButton) {
-        let nameEditText = mEditTextUser.text
-        let firebaseUserData = FirebaseUser(name: nameEditText!)
-        mFirebaseViewModel.createUser(firebaseUser: firebaseUserData)
+        mFirebaseViewModel.getFirebaseUserListFlow()
     }
     
     @objc func didButtonAddUserClick(_ sender: UIButton) {
-        mFirebaseViewModel.getFirebaseUserListFlow()
+        let nameEditText = mEditTextUser.text
+        let firebaseUserData = FirebaseUser(name: nameEditText!)
+        mFirebaseViewModel.createUser(firebaseUser: firebaseUserData)
     }
        
     /*****************************************************************************
