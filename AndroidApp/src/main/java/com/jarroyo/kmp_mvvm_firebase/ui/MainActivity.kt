@@ -33,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         activity_main_button.setOnClickListener {
             mFirebaseViewModel.getFirebaseUserListFlow()
         }
+
+        activity_main_button_add.setOnClickListener {
+            createUser()
+        }
     }
 
     private fun initViewModel() {
@@ -58,14 +62,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun createUser() {
+        if (activity_main_et_user.text.toString().isNullOrBlank()) {
+            Toast.makeText(this, "Enter a username please", Toast.LENGTH_SHORT).show()
+        } else {
+            mFirebaseViewModel.createUser(FirebaseUser(activity_main_et_user.text.toString()))
+        }
+
+    }
+
     /****************************************************************************
      * OBSERVER
      ***************************************************************************/
     private fun observeViewModel() {
-        mFirebaseViewModel.mGetFirebaseUserListLiveData.addObserver { getFirebaseUserListState(it) }
+        mFirebaseViewModel.mGetFirebaseUserListLiveData.addObserver { getFirebaseUserListStateObserver(it) }
+        mFirebaseViewModel.mCreateUserLiveData.addObserver { createFirebaseUserStateObserver(it) }
     }
 
-    fun getFirebaseUserListState(state: GetFirebaseUserListState) {
+    fun getFirebaseUserListStateObserver(state: GetFirebaseUserListState) {
         when (state) {
             is SuccessGetFirebaseUserListState -> {
                 hideLoading()
@@ -85,7 +99,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun createFirebaseUserStateObserver(state: CreateFirebaseUserState) {
+        when (state) {
+            is SuccessCreateFirebaseUserState -> {
+                hideLoading()
+                val response = state.response as Response.Success
+                onSuccessFirebaseUserList(response.data)
+            }
 
+            is LoadingCreateFirebaseUserState -> {
+                showLoading()
+            }
+
+            is ErrorCreateFirebaseUserState -> {
+                hideLoading()
+                val response = state.response as Response.Error
+                showError(response.message)
+            }
+        }
+    }
     /**
      * ON SUCCESS
      */

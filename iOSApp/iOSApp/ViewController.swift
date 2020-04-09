@@ -12,6 +12,8 @@ import SharedCode
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     
+    @IBOutlet weak var mButtonAddUser: UIButton!
+    @IBOutlet weak var mEditTextUser: UITextField!
     @IBOutlet weak var mTableView: UITableView!
     @IBOutlet weak var mButtonGetData: UIButton!
     
@@ -28,6 +30,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     func configView() {
         mButtonGetData.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
+        mButtonAddUser.addTarget(self, action: #selector(didButtonAddUserClick), for: .touchUpInside)
             
         mTableView.dataSource = self
         mTableView.delegate = self
@@ -53,6 +56,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             }
             
         }
+        
+        mFirebaseViewModel.mCreateUserLiveData.addObserver { (mCurrentState) in
+            if (mCurrentState is SuccessCreateFirebaseUserState) {
+                let successState = mCurrentState as! SuccessCreateFirebaseUserState
+                let response = (successState.response as! Response.Success)
+                let userList = response.data as! [FirebaseUser]
+                self.onSuccessGetFirebaseUserList(list: userList)
+                
+            } else if (mCurrentState is LoadingCreateFirebaseUserState) {
+
+            } else if (mCurrentState is ErrorCreateFirebaseUserState) {
+
+            }
+            
+        }
     }
     
     func onSuccessGetFirebaseUserList(list: [FirebaseUser]) {
@@ -63,6 +81,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     * ON CLICKS
     ****************************************************************************/
     @objc func didButtonClick(_ sender: UIButton) {
+        let nameEditText = mEditTextUser.text
+        let firebaseUserData = FirebaseUser(name: nameEditText!)
+        mFirebaseViewModel.createUser(firebaseUser: firebaseUserData)
+    }
+    
+    @objc func didButtonAddUserClick(_ sender: UIButton) {
         mFirebaseViewModel.getFirebaseUserListFlow()
     }
        

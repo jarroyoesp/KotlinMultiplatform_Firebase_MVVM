@@ -35,12 +35,25 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="78p-wb-j2g">
+                                <rect key="frame" x="20" y="71" width="228" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DGI-Sp-2Wu">
+                                <rect key="frame" x="295" y="73" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Add"/>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="mButtonAddUser" destination="DGI-Sp-2Wu" id="Po4-Vl-zjf"/>
                         <outlet property="mButtonGetData" destination="2FF-lS-PEc" id="aMl-4X-Erb"/>
+                        <outlet property="mEditTextUser" destination="78p-wb-j2g" id="GOg-Z9-tmy"/>
                         <outlet property="mTableView" destination="q13-u9-iXG" id="qR2-Um-nTx"/>
                     </connections>
                 </viewController>

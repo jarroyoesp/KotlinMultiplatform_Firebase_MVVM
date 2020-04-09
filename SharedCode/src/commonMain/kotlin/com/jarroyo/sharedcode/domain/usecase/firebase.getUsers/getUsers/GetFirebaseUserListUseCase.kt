@@ -1,4 +1,4 @@
-package com.jarroyo.sharedcode.domain.usecase.firebase.getUsers
+package com.jarroyo.sharedcode.domain.usecase.firebase.getUsers.getUsers
 
 import com.jarroyo.sharedcode.base.Response
 import com.jarroyo.sharedcode.data.repository.FirebaseRepository

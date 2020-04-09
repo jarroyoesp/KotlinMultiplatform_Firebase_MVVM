@@ -3,9 +3,13 @@ package com.jarroyo.sharedcode.data.repository
 import co.touchlab.firebase.firestore.*
 import com.jarroyo.sharedcode.base.Response
 import com.jarroyo.sharedcode.domain.model.firebase.FirebaseUser
+import com.jarroyo.sharedcode.domain.usecase.firebase.getUsers.createUser.CreateUserRequest
 import kotlinx.coroutines.flow.flow
 
-class FirebaseRepository {
+class FirebaseRepository() {
+
+    val COLLECTION_USERS = "Users"
+    val DOCUMENT_USER_NAME = "name"
 
     /***********************************************************************************************
      * GET USERS FROM FIREBASE
@@ -17,7 +21,7 @@ class FirebaseRepository {
 
     suspend fun getListFromFirebase(): List<FirebaseUser> {
         val reponse = getFirebaseInstance()
-            .collection("Users")
+            .collection(COLLECTION_USERS)
             .suspendGet()
 
         val list = parseFirebaseUserList(reponse.documents_)
@@ -34,7 +38,7 @@ class FirebaseRepository {
     private fun parseFirebaseUser(documentSnapshot: DocumentSnapshot): FirebaseUser {
         val level = documentSnapshot.data_()
         @Suppress("UNCHECKED_CAST")
-        val name = level?.get("name") as String
+        val name = level?.get(DOCUMENT_USER_NAME) as String
         return FirebaseUser(name)
     }
 
@@ -43,5 +47,16 @@ class FirebaseRepository {
      **********************************************************************************************/
     suspend fun getDiscoverFlow() = flow {
         emit(getFirebaseUserList())
+    }
+
+    /***********************************************************************************************
+     * CREATE USER
+     **********************************************************************************************/
+    suspend fun createUser(request: CreateUserRequest) : Response<List<FirebaseUser>> {
+        val userMap = mutableMapOf<String, String>()
+        userMap.put(DOCUMENT_USER_NAME, request.firebaseUser.name)
+        getFirebaseInstance().collection(COLLECTION_USERS).suspendAdd(userMap)
+
+        return getFirebaseUserList()
     }
 }
