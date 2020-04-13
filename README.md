@@ -19,6 +19,7 @@ Example of application using Kotlin Multiplatform and MVVM pattern for both plat
 
 <img src="https://github.com/jarroyoesp/KotlinMultiplatform_Firebase_MVVM/blob/master/images/iOSAppResult.png" width="200">
 
-Related with: [here](https://proandroiddev.com/kotlin-multiplatform-mvvm-clean-architecture-f20b99f90b95)
+If you want to know a bit more without checl all the code, you can take a look at this post on ProAndroidDev.com:
+https://proandroiddev.com/kotlin-multiplatform-firebase-mvvm-4cdcddd98893
 
 
