@@ -1,5 +1,6 @@
 # Kotlin-Multiplatform MVVM Firebase (Android & iOS)
 ![kotlin-version](https://img.shields.io/badge/kotlin-1.3.50-orange)
+<a target="_blank" href="https://androidweekly.net/issues/issue-410"><img src="https://androidweekly.net/issues/issue-410/badge"></a>
 
 Example of application using Kotlin Multiplatform and MVVM pattern for both platforms (Android & iOS) and FirestoreKMP to get data from Firebase. To achieve it the libraries used are:
 
